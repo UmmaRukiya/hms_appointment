@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <img alt="Vue logo" src="./assets/logo.png">
   <HelloWorld msg="Welcome to Your Vue.js App"/>
 </template>
@@ -23,4 +23,21 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+</style> -->
+
+
+<template>
+  <div id="app">
+    <router-view></router-view>  <!-- Placeholder for pages -->
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'App'
+}
+</script>
+
+<style scoped>
+/* Global CSS or other styles */
 </style>
