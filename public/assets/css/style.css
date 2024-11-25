@@ -6,18 +6,18 @@
 }
 
 /* Body and page layout */
-body {
-    font-family: 'Poppins', sans-serif;
+/* body {
+    font-family: 'Poppins', sans-serif; */
     /* background: linear-gradient(135deg, #00c6ff, #0072ff);  */
-    background-image: url('../image/medicine-background.jpg');
+    /* background-image: url('../image/medicine-background.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
     color: white;
-}
+} */
 body::before {
     content: ''; /* Necessary to create the pseudo-element */
     position: absolute; /* Position it absolutely inside the container */
@@ -196,7 +196,7 @@ body, .login-container {
     width: 100%;
 }
 .regi-box{
-    margin-top: 100px;
+    margin-top: 90px;
     background-color: rgba(255, 255, 255, 0.9); /* Slightly more opaque background for the form */
     /* background-color: white; */
     padding: 40px 30px;
@@ -216,8 +216,8 @@ body, .login-container {
 }
 .registration input, select, textarea {
     width: 100%;
-    padding: 8px;
-    margin: 8px 0 16px;
+    padding: 5px;
+    margin: 5px 0 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }

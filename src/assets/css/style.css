@@ -216,8 +216,8 @@ body, .login-container {
 }
 .registration input, select, textarea {
     width: 100%;
-    padding: 8px;
-    margin: 8px 0 16px;
+    padding: 5px;
+    margin: 5px 0 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }

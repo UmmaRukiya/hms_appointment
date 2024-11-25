@@ -7,7 +7,7 @@
         <div class="welcome">Welcome to HMS Hospital</div>
         <form @submit.prevent="handleLogin" class="form">
           <div class="input-group">
-            <input type="text" v-model="username" placeholder="Username" required>
+            <input type="text" v-model="name" placeholder="Username" required>
           </div>
           <div class="input-group">
             <input type="password" v-model="password" placeholder="Password" required>
@@ -16,7 +16,7 @@
             <a href="#">Forgot password?</a>
           </div>
           <div class="input-group">
-            <button type="submit" class="login-btn">Login</button>
+            <button type="button" @click="login" class="login-btn">Login</button>
           </div>
         </form>
         <div class="signup-link">
@@ -27,21 +27,49 @@
   </template>
   
   <script>
+  import DataService from "../services/DataService";
+  import router from '@/router';
   export default {
+    name: "Login",
     data() {
       return {
-        username: '',
-        password: ''
+        FormData: {
+          name: '',
+          password: ''
+        },
+        
       };
     },
     methods: {
-      handleLogin() {
-        // Handle login logic here (e.g., API call)
-        alert('Logged in!');
-        this.$router.push('/appointment');
-      }
+      login(){
+        var data={
+          name:this. FormData.name,
+          password: this. FormData.password
+        };
+      
+      // handleLogin() {
+      //   // Handle login logic here (e.g., API call)
+      //   alert('Logged in!');
+      //   this.$router.push('/appointment');
+      // }
+
+      DataService.login(data)
+        .then(response => {
+          console.log(response.data.data.token)
+          if(response.data.data.token)
+            sessionStorage.setItem('uid', response.data.data.token);
+          else
+            alert(response.data.error)
+            
+            router.push({ name: 'Appointment' });
+            window.location.href='/appointment';
+        })
+        .catch(e => {
+          console.log(e);
+        });
     }
   }
+};
   </script>
   
   <style scoped>
