@@ -161,6 +161,15 @@ export default {
       this.day = '';
       this.session = '';
       this.appointmentDate = '';
+    },
+    async submitAppointment() {
+      try {
+        const response = await axios.post('http://localhost:8000/api/appointmentrequest', this.appointment);
+        this.message = response.data.message;  // Success message
+      } catch (error) {
+        this.message = 'An error occurred while submitting the appointment request.';
+        console.error(error);
+      }
     }
   }
 }

@@ -7,7 +7,7 @@
         <div class="welcome">Welcome to HMS Hospital</div>
         <form @submit.prevent="handleLogin" class="form">
           <div class="input-group">
-            <input type="text" v-model="name" placeholder="Username" required>
+            <input type="text" v-model="contact" placeholder="01XXXXXXXXX" required>
           </div>
           <div class="input-group">
             <input type="password" v-model="password" placeholder="Password" required>
@@ -34,7 +34,7 @@
     data() {
       return {
         FormData: {
-          name: '',
+          contact: '',
           password: ''
         },
         
@@ -43,7 +43,7 @@
     methods: {
       login(){
         var data={
-          name:this. FormData.name,
+          contact:this. FormData.contact,
           password: this. FormData.password
         };
       
