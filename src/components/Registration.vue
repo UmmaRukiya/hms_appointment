@@ -68,8 +68,8 @@ export default {
         contact: this.FormData.contact,
         birth_date: this.FormData.birth_date,
         email: this.FormData.email,
-        password: this.FormData.password,
-        c_password: this.FormData.c_password,
+        password: this.FormData.password
+        // c_password: this.FormData.c_password,
       };
 
       // Send registration data to the backend

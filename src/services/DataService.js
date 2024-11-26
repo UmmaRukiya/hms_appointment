@@ -5,7 +5,7 @@ class DataService {
     return http.post("patient/login", data);
   }
   registration(data) {
-    return http.post("/register", data);
+    return http.post("patient/register", data);
   }
   // orders(uid) {
   //   return http.get(`/orders/${uid}`);
