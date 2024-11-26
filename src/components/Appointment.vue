@@ -91,7 +91,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Dr. Smith</td>
+                        <td>{{doctor}}</td>
                         <td>John Doe</td>
                         <td>2024-11-20</td>
                         <td>2024-11-25 10:00 AM</td>
@@ -112,6 +112,7 @@
 
 <script>
 export default {
+  name: "appointment",
   data() {
     return {
       patientName: '',
@@ -164,8 +165,8 @@ export default {
     },
     async submitAppointment() {
       try {
-        const response = await axios.post('http://localhost:8000/api/appointmentrequest', this.appointment);
-        this.message = response.data.message;  // Success message
+        // const response = await axios.post('http://localhost:8000/api/appointmentrequest', this.appointment);
+        // this.message = response.data.message;  // Success message
       } catch (error) {
         this.message = 'An error occurred while submitting the appointment request.';
         console.error(error);

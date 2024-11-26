@@ -7,10 +7,10 @@
         <div class="welcome">Welcome to HMS Hospital</div>
         <form @submit.prevent="handleLogin" class="form">
           <div class="input-group">
-            <input type="text" v-model="contact" placeholder="01XXXXXXXXX" required>
+            <input type="text" v-model="FormData.contact" placeholder="01XXXXXXXXX" required>
           </div>
           <div class="input-group">
-            <input type="password" v-model="password" placeholder="Password" required>
+            <input type="password" v-model="FormData.password" placeholder="Password" required>
           </div>
           <div class="forgot-password">
             <a href="#">Forgot password?</a>
@@ -30,7 +30,7 @@
   import DataService from "../services/DataService";
   import router from '@/router';
   export default {
-    name: "Login",
+    name: "login",
     data() {
       return {
         FormData: {
@@ -61,7 +61,7 @@
           else
             alert(response.data.error)
             
-            router.push({ name: 'Appointment' });
+            router.push({ name: 'appointment' });
             window.location.href='/appointment';
         })
         .catch(e => {
