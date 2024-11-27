@@ -92,5 +92,100 @@ export default {
 </script>
 
 <style scoped>
-@import "@/assets/css/style.css";
+.regi-container {
+    /* width: 30%;
+    margin: 0 auto;
+    
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    /* margin-top: 100px; */
+
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.regi-box{
+    margin-top: 100px;
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly more opaque background for the form */
+    /* background-color: white; */
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    /* text-align: center; */
+    position: relative;
+    z-index: 1;
+    /* opacity: 0.8; */
+    margin-top: 80px;
+}
+.registration  label {
+    display: block;
+    margin: 8px 0 4px;
+    color: rgb(1, 1, 63)
+}
+.registration input, select, textarea {
+    width: 100%;
+    padding: 5px;
+    margin: 5px 0 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.regi-logo{
+    width: 30px;
+    height: 30px;
+    padding-top: 5px;
+   
+}
+  .new{
+    text-align: center;
+    padding-bottom: 10px;
+}
+h1 {
+    text-align: center;
+    color: #50bbf8f1;
+}
+.submit-btn {
+    background-color: #50bbf8f1;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+.submit-btn:hover {
+    background-color: #50bbf8f1;
+}
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../assets/image/medicine-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.7; /* Lower the opacity here */
+    z-index: -1; /* Make sure the background is behind the content */
+}
+.login-link {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #021d6e;
+}
+
+.login-link a {
+    color: #00c6ff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.login-link a:hover {
+    color: #0072ff; 
+}
 </style>

@@ -73,6 +73,187 @@
   </script>
   
   <style scoped>
-  @import "@/assets/css/style.css";
+ /* General reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body and page layout */
+body {
+    font-family: 'Poppins', sans-serif;
+    /* background: linear-gradient(135deg, #00c6ff, #0072ff);  */
+    background-image: url('../assets/image/medicine-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: white;
+}
+body::before {
+    content: ''; /* Necessary to create the pseudo-element */
+    position: absolute; /* Position it absolutely inside the container */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: inherit; /* Inherit the background image from the parent */
+    background-size: cover; /* Ensure the background image covers the container */
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.3; /* Adjust the opacity of the background image */
+    z-index: -1; /* Make sure it stays behind the content */
+}
+
+
+/* Login Container */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Login Box */
+.login-box {
+    background-color: white;
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    /* opacity: 0.8; */
+    margin-top: 150px;
+}
+
+/* Logo */
+.logo img {
+    width: 30px;
+    height: 30px;
+    padding-top: 5px;
+    /* margin-bottom: 20px; */
+}
+
+/* Heading */
+h2 {
+    font-size: 26px;
+    color: #333;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+/* Form elements */
+.input-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #00c6ff;
+    box-shadow: 0 0 5px rgba(0, 198, 255, 0.5);
+}
+
+/* Forgot password link */
+.forgot-password {
+    text-align: right;
+    margin-bottom: 15px;
+}
+
+.forgot-password a {
+    font-size: 14px;
+    color: #00c6ff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.forgot-password a:hover {
+    color: #0072ff;
+}
+
+/* Login Button */
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #00c6ff;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #0072ff;
+}
+.login-btn a {
+    color: white;
+    text-decoration: none;
+    
+
+}
+.welcome{
+    color: #021d6e;
+    text-align: left;
+}
+.form{
+    padding-top: 20px;
+}
+
+/* Sign Up link */
+.signup-link {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #021d6e;
+}
+
+.signup-link a {
+    color: #00c6ff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.signup-link a:hover {
+    color: #0072ff;
+}
+
+/* Hover effects for input fields */
+.input-group input:focus,
+.login-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth page transition */
+body, .login-container {
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Keyframe animation for fade-in effect */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
   </style>
   

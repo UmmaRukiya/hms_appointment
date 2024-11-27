@@ -28,13 +28,23 @@ export default {
 
 <template>
   <div id="app">
+    <Header></Header>
     <router-view></router-view>  <!-- Placeholder for pages -->
+
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
+
+import Header from './components/Include/Header.vue'
+import Footer from './components/Include/Footer.vue'
+import 'animate.css';
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    Header,Footer
+  }
 }
 </script>
 
