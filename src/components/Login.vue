@@ -4,7 +4,9 @@
         <div class="logo">
           <h2><img src="@/assets/image/log.png" alt="Medical Logo">HMS Hospital</h2>
         </div>
-        <div class="welcome">Welcome to HMS Hospital</div>
+        <div class="welcome">welcome to</div>
+            <h3 class="wel">HMS Hospital Ltd.</h3>
+            <div class="welcome">Log in to make an appointment . . .</div>
         <form @submit.prevent="handleLogin" class="form">
           <div class="input-group">
             <input type="text" v-model="FormData.contact" placeholder="01XXXXXXXXX" required>
@@ -81,10 +83,10 @@
 }
 
 /* Body and page layout */
-body {
+.login-container {
     font-family: 'Poppins', sans-serif;
     /* background: linear-gradient(135deg, #00c6ff, #0072ff);  */
-    background-image: url('../assets/image/medicine-background.jpg');
+    background-image: url('../assets//image/copy-space-medical-desk.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -93,20 +95,20 @@ body {
     height: 100vh;
     color: white;
 }
-body::before {
-    content: ''; /* Necessary to create the pseudo-element */
-    position: absolute; /* Position it absolutely inside the container */
+/* .login-container::before {
+    content: ''; 
+    position: absolute; 
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: inherit; /* Inherit the background image from the parent */
-    background-size: cover; /* Ensure the background image covers the container */
+    background-image: inherit; 
+    background-size: cover; 
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0.3; /* Adjust the opacity of the background image */
-    z-index: -1; /* Make sure it stays behind the content */
-}
+    opacity: 0.3;
+    z-index: -1; 
+} */
 
 
 /* Login Container */
@@ -128,14 +130,14 @@ body::before {
     position: relative;
     z-index: 1;
     /* opacity: 0.8; */
-    margin-top: 150px;
+    /* margin-top: 150px; */
 }
 
 /* Logo */
 .logo img {
     width: 30px;
     height: 30px;
-    padding-top: 5px;
+    /* padding-top: 5px; */
     /* margin-bottom: 20px; */
 }
 
@@ -210,6 +212,12 @@ h2 {
 .welcome{
     color: #021d6e;
     text-align: left;
+    font-size: 14px;
+}
+.wel{
+    color: #021d6e;
+    text-align: left;
+    font-weight: 600;
 }
 .form{
     padding-top: 20px;
@@ -253,6 +261,7 @@ body, .login-container {
         opacity: 1;
     }
 }
+
 
 
   </style>

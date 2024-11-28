@@ -119,12 +119,13 @@ export default {
     position: relative;
     z-index: 1;
     /* opacity: 0.8; */
-    margin-top: 80px;
+    margin-top: 50px;
 }
 .registration  label {
     display: block;
     margin: 8px 0 4px;
-    color: rgb(1, 1, 63)
+    color: rgb(1, 1, 63);
+    font-size: 14px;
 }
 .registration input, select, textarea {
     width: 100%;
@@ -132,16 +133,17 @@ export default {
     margin: 5px 0 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 14px;
 }
 .regi-logo{
     width: 30px;
     height: 30px;
-    padding-top: 5px;
-   
+  
 }
   .new{
     text-align: center;
     padding-bottom: 10px;
+    font-size: 12px;
 }
 h1 {
     text-align: center;
@@ -155,6 +157,7 @@ h1 {
     border-radius: 4px;
     cursor: pointer;
     width: 100%;
+    font-size: 14px;
 }
 .submit-btn:hover {
     background-color: #50bbf8f1;
@@ -166,13 +169,14 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('../assets/image/medicine-background.jpg');
+    /* background-image: url('../assets/image/medicine-background.jpg'); */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     opacity: 0.7; /* Lower the opacity here */
     z-index: -1; /* Make sure the background is behind the content */
 }
+
 .login-link {
     margin-top: 15px;
     font-size: 14px;
@@ -187,5 +191,17 @@ body::before {
 
 .login-link a:hover {
     color: #0072ff; 
+}
+.regi-container {
+    font-family: 'Poppins', sans-serif;
+    /* background: linear-gradient(135deg, #00c6ff, #0072ff);  */
+    background-image: url('../assets/image/copy-space-medical-desk.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: white;
 }
 </style>

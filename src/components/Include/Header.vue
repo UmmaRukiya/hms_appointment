@@ -6,18 +6,22 @@
             <div class="container-fluid">
                 <div class="row align-items-center">
                     <!-- Logo -->
-                    <div class="col-xl-2 col-lg-2 col-md-1">
+                    <!-- <div class="col-xl-2 col-lg-2 col-md-1">
                         <div class="logo">
                             <a href="index.html"><img src="assets/img/logo/logo.png" alt="" class="log"></a>
                         </div>
-                    </div>
+                    </div> -->
+                    <div class="logo-container">
+          <img src="/assets/image/log.png" alt="Logo" class="logo" />
+          <span class="logo-text">HOSPITAL</span>
+        </div>
                     <div class="col-xl-10 col-lg-10 col-md-10">
                         <div class="menu-main d-flex align-items-center justify-content-end">
                             <!-- Main-menu -->
                             <div class="main-menu f-right d-none d-lg-block">
                                 <nav>
                                     <ul id="navigation">
-                                        <li><a href="index.html">Home</a></li>
+                                        <li><router-link to="home">Home</router-link></li>
                                         <li><a href="about.html">About</a></li>
                                         <li><a href="doctor.html">Doctors</a></li>
                                         <li><router-link to="department">Department</router-link >
@@ -45,7 +49,7 @@
                                             </ul>
                                         </li>
                                         <!-- <li><a href="contact.html">Contact</a></li> -->
-                                        <li><a href="appointment.html">Appointment</a></li>
+                                        <li><router-link to="appointment">Appointment</router-link></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -85,6 +89,24 @@ export default {
 //   }
 }
 </script>
+<style scoped>
+  .logo-container {
+    display: flex;
+    align-items: center;
+  }
+ .logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    margin-left: 10px;
+    color: #1f2b7b;
+  }
+  .logo {
+    width: 50px;
+    height: 50px;
+  }
+  
+  
+</style>
 
 
   

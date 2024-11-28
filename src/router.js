@@ -7,13 +7,13 @@ import { createWebHistory, createRouter } from "vue-router";
 const routes = [
   // { path: '/', component: Login },
   {
-    path: "/home",
+    path: "/",
     alias: "/home",
     name: "home",
     component: () => import("./components/Home")
   },
   {
-    path: "/department",
+    path: "/department/",
     alias: "/department",
     name: "department",
     component: () => import("./components/Department")
@@ -32,7 +32,7 @@ const routes = [
   },
     {path: "/appointment",
     alias: "/appointment",
-    name: "appointment",
+    name: "Appointment",
     component: () => import("./components/Appointment")
   }
   // { path: '/registration', component: Registration },
