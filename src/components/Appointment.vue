@@ -21,15 +21,15 @@
     </div>
   
     <div class="appointment-container">
-      <div class="row">
+      <div class="row px-4">
         <!-- Appointment Form Section -->
-        <div class="col-md-6">
+        <div class="col-md-5">
           <div class="form-container">
             <h2>Book Your Appointment</h2>
             <form action="#" method="post" class="appointment-form">
               <!-- Patient Information Section -->
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                   <label for="patientName">Patient Name</label>
                   <input type="text" id="patientName" name="patientName" required placeholder="Enter your full name" class="form-control">
                 </div>
@@ -38,15 +38,16 @@
                   <label for="contactNumber">Contact Number</label>
                   <input type="tel" id="contactNumber" name="contactNumber" required placeholder="Enter your contact number" class="form-control">
                 </div>
-              </div>
-  
-              <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 px-4">
                   <label for="age">Age</label>
                   <input type="number" id="age" name="age" required placeholder="Enter your age" class="form-control">
                 </div>
+              </div>
   
-                <div class="col-md-6">
+              <div class="row">
+               
+  
+                <div class="col-md-12">
                   <label for="department">Choose Department</label>
                   <select id="department" name="department" required class="form-control">
                     <option value="">--Select Department--</option>
@@ -59,7 +60,7 @@
               </div>
   
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                   <label for="doctor">Choose Doctor</label>
                   <select id="doctor" name="doctor" required class="form-control">
                     <option value="">--Select Doctor--</option>
@@ -70,7 +71,7 @@
                 </div>
   
                 <div class="col-md-6">
-                  <label for="day">Choose Day</label>
+                  <label for="day"> Day</label>
                   <select id="day" name="day" required class="form-control">
                     <option value="">--Select Day--</option>
                     <option value="monday">Monday</option>
@@ -80,11 +81,8 @@
                     <option value="friday">Friday</option>
                   </select>
                 </div>
-              </div>
-  
-              <div class="row">
-                <div class="col-md-6">
-                  <label for="session">Choose Session</label>
+                <div class="col-md-6 px-4">
+                  <label for="session">Session</label>
                   <select id="session" name="session" required class="form-control">
                     <option value="">--Select Session--</option>
                     <option value="morning">Morning</option>
@@ -92,6 +90,10 @@
                     <option value="evening">Evening</option>
                   </select>
                 </div>
+              </div>
+  
+              <div class="row">
+               
   
                 <div class="col-md-6">
                   <label for="appointmentDate">Appointment Date</label>
@@ -104,9 +106,9 @@
             </form>
           </div>
         </div>
-  
+        <!-- <div class="col-md-1"></div> -->
         <!-- Booking History Section -->
-        <div class="col-md-6">
+        <div class="col-md-7 px-4">
           <div class="history-container">
             <h2>Booking History</h2>
             <table>

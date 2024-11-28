@@ -50,4 +50,5 @@ export default {
 
 <style scoped>
 /* Global CSS or other styles */
+
 </style>

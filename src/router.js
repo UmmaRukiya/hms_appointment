@@ -13,7 +13,7 @@ const routes = [
     component: () => import("./components/Home")
   },
   {
-    path: "/department/",
+    path: "/department",
     alias: "/department",
     name: "department",
     component: () => import("./components/Department")
@@ -43,5 +43,15 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+// Global navigation guard to remove the trailing slash
+router.beforeEach((to, from, next) => {
+  if (to.path.endsWith('/')) {
+    next({ path: to.path.slice(0, -1), query: to.query, hash: to.hash });
+  } else {
+    next();
+  }
+});
+
 
 export default router;

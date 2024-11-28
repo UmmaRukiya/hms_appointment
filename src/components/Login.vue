@@ -63,7 +63,7 @@
           else
             alert(response.data.error)
             
-            router.push({ name: 'appointment' });
+            router.push({ name: 'Appointment' });
             window.location.href='/appointment';
         })
         .catch(e => {
