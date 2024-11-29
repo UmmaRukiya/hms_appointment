@@ -7,6 +7,15 @@ class DataService {
   registration(data) {
     return http.post("patient/register", data);
   }
+  department(data) {
+    return http.get("department/index", data);
+  }
+  doctor(data) {
+    return http.get("doctor/index", data);
+  }
+  appointmentrequest(data) {
+    return http.get("appointmentrequest/index", data);
+  }
   // orders(uid) {
   //   return http.get(`/orders/${uid}`);
   // }
