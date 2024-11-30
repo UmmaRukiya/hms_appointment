@@ -68,7 +68,7 @@
             <div class="row">
               <div class="col-md-6">
                 <label for="day">Day</label>
-                <select v-model="day" required class="form-control">
+                <select v-model="day"  class="form-control">
                   <option value="">--Select Day--</option>
                   <option value="monday">Monday</option>
                   <option value="tuesday">Tuesday</option>
@@ -79,7 +79,7 @@
               </div>
               <div class="col-md-6 px-4">
                 <label for="session">Session</label>
-                <select v-model="session" required class="form-control">
+                <select v-model="session" class="form-control">
                   <option value="">--Select Session--</option>
                   <option value="morning">Morning</option>
                   <option value="afternoon">Afternoon</option>
@@ -159,8 +159,9 @@ export default {
     async fetchDepartments() {
       try {
         const response = await DataService.department();
-        const data = await response.json();
+        const data = await response.data.data;
         if (data) {
+          console.log(data);
           this.departments = data; // Store departments
         } else {
           console.error('Failed to load departments');
@@ -173,11 +174,14 @@ export default {
     // Fetch doctors based on selected department
     async fetchDoctors() {
       if (this.selectedDepartment) {
+        console.log(this.selectedDepartment)
         try {
-          const response = await DataService.getDoctorsByDepartment(this.selectedDepartment);
-          const data = await response.json();
+          const response = await DataService.doctor(this.selectedDepartment);
+          const data = await response.data.data;
           if (data) {
             this.doctors = data; // Store doctors
+          }else{
+            this.doctors =[];
           }
         } catch (error) {
           console.error("Error fetching doctors:", error);

@@ -34,7 +34,17 @@ const routes = [
     alias: "/appointment",
     name: "Appointment",
     component: () => import("./components/Appointment")
-  }
+  },
+    {path: "/doctor",
+    alias: "/doctor",
+    name: "Doctor",
+    component: () => import("./components/Doctor")
+  },
+    {path: "/cardiology",
+    alias: "/cardiology",
+    name: "Cardiology",
+    component: () => import("./components/Cardiology")
+  },
   // { path: '/registration', component: Registration },
   // { path: '/appointment', component: Appointment }
 ];

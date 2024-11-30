@@ -23,11 +23,11 @@
                                     <ul id="navigation">
                                         <li><router-link to="home">Home</router-link></li>
                                         <li><a href="about.html">About</a></li>
-                                        <li><a href="doctor.html">Doctors</a></li>
+                                        <li><a href="doctor">Doctors</a></li>
                                         <li><router-link to="department">Department</router-link >
                                         <ul class="submenu">
                                             <li><a href="blog_details.html">Neuro Medicine</a></li>
-                                            <li><a href="elements.html">Cardiology</a></li>
+                                            <li><a href="cardiology">Cardiology</a></li>
                                             <li><a href="elements.html">Gastroenterology</a></li>
                                             <li><a href="elements.html">Ent</a></li>
                                             <li><a href="elements.html">Gynee & OBS</a></li>

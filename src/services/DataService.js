@@ -10,8 +10,8 @@ class DataService {
   department(data) {
     return http.get("department/index", data);
   }
-  doctor(data) {
-    return http.get("doctor/index", data);
+  doctor(d) {
+    return http.get("doctor/index?department_id="+d);
   }
   appointmentrequest(data) {
     return http.get("appointmentrequest/index", data);
