@@ -64,26 +64,23 @@
               </div>
             </div>
 
-            <!-- Day and Session Select -->
             <div class="row">
               <div class="col-md-6">
                 <label for="day">Day</label>
-                <select v-model="day"  class="form-control">
+                <select v-model="day" class="form-control">
                   <option value="">--Select Day--</option>
-                  <option value="monday">Monday</option>
-                  <option value="tuesday">Tuesday</option>
-                  <option value="wednesday">Wednesday</option>
-                  <option value="thursday">Thursday</option>
-                  <option value="friday">Friday</option>
+                  <option v-for="day in availableDays" :key="day" :value="day">
+                    {{ day }}
+                  </option>
                 </select>
               </div>
               <div class="col-md-6 px-4">
                 <label for="session">Session</label>
                 <select v-model="session" class="form-control">
                   <option value="">--Select Session--</option>
-                  <option value="morning">Morning</option>
-                  <option value="afternoon">Afternoon</option>
-                  <option value="evening">Evening</option>
+                  <option v-for="shift in availableShifts" :key="shift" :value="shift">
+                    {{ shift }}
+                  </option>
                 </select>
               </div>
             </div>
@@ -133,6 +130,7 @@
 
 <script>
 import DataService from '@/services/DataService'; // Adjust the path based on where dataservice.js is located
+
 export default {
   name: "Appointment",
   data() {
@@ -144,10 +142,12 @@ export default {
       patientName: '',
       contactNumber: '',
       age: '',
+      appointmentDate: '',
+      appointments: [],
+      availableDays: [],
+      availableShifts: [],
       day: '',
       session: '',
-      appointmentDate: '',
-      appointments: []
     };
   },
   mounted() {
@@ -161,7 +161,6 @@ export default {
         const response = await DataService.department();
         const data = await response.data.data;
         if (data) {
-          console.log(data);
           this.departments = data; // Store departments
         } else {
           console.error('Failed to load departments');
@@ -174,14 +173,14 @@ export default {
     // Fetch doctors based on selected department
     async fetchDoctors() {
       if (this.selectedDepartment) {
-        console.log(this.selectedDepartment)
         try {
           const response = await DataService.doctor(this.selectedDepartment);
           const data = await response.data.data;
           if (data) {
             this.doctors = data; // Store doctors
-          }else{
-            this.doctors =[];
+            this.clearDoctorData(); // Reset doctor availability
+          } else {
+            this.doctors = [];
           }
         } catch (error) {
           console.error("Error fetching doctors:", error);
@@ -189,14 +188,33 @@ export default {
       }
     },
 
+    // Fetch doctor's available days and shifts
+    async fetchDoctorAvailability() {
+      if (this.selectedDoctor) {
+        try {
+          const response = await DataService.doctorAvailability(this.selectedDoctor);
+          const data = await response.data;
+          if (data) {
+            this.availableDays = data.days; // List of available days
+            this.availableShifts = data.shifts; // List of available sessions
+          } else {
+            this.availableDays = [];
+            this.availableShifts = [];
+          }
+        } catch (error) {
+          console.error("Error fetching doctor availability:", error);
+        }
+      }
+    },
+
     // Fetch appointment history for the current user
     async fetchAppointments() {
       try {
-        const response = await DataService.appointmentrequest(); // Call the doctor method
+        const response = await DataService.appointmentrequest(); // Call the appointment method
         if (response && response.data) {
-          this.doctors = response.data; // Store doctors data in the component's state
+          this.appointments = response.data; // Store appointment history
         }
-       } catch (error) {
+      } catch (error) {
         console.error("Error fetching appointment history:", error);
       }
     },
@@ -204,64 +222,64 @@ export default {
     // Handle appointment form submission
     async handleAppointment() {
       // Validate form inputs
-      if (!this.patientName || !this.contactNumber || !this.age || !this.department || !this.doctor || !this.day || !this.session || !this.appointmentDate) {
+      if (!this.patientName || !this.contactNumber || !this.age || !this.selectedDepartment || !this.selectedDoctor || !this.day || !this.session || !this.appointmentDate) {
         alert('Please fill all fields!');
         return;
       }
 
       // Prepare the data for the appointment request
       const appointmentRequest = {
-        department_id: this.department,
-        doctor_id: this.doctor,
+        department_id: this.selectedDepartment,
+        doctor_id: this.selectedDoctor,
         patient_name: this.patientName,
-        email: this.contactNumber, // Assuming contactNumber is used as email in the example
         contact_no: this.contactNumber,
-        gender: "male", // Add logic for gender input if needed
         age: this.age,
-        blood_id: "bloodgroup", // Add logic for blood type if needed
-        app_date: this.appointmentDate
+        app_date: this.appointmentDate,
+        gender: 'male', // Assuming gender is static here, modify if necessary
+        blood_id: 'bloodgroup' // Modify if necessary
       };
 
       try {
         // Send appointment data to the backend API
-        const response = await fetch('/api/appointmentrequest/create', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(appointmentRequest)
-        });
+        const response = await DataService.createAppointment(appointmentRequest);
 
-        if (response.ok) {
+        if (response && response.data) {
           // If appointment is successfully booked, update the booking history
           this.appointments.push({
-            doctor: this.doctors.find(doc => doc.doctor_id === this.doctor).name,
+            doctor: this.doctors.find(doc => doc.doctor_id === this.selectedDoctor).name,
             patientName: this.patientName,
             appointmentDate: this.appointmentDate,
             day: this.day,
             session: this.session,
-            status: 'Confirmed'
+            status: 'Pending'
           });
-          this.clearForm();
+
           alert('Appointment booked successfully!');
-        } else {
-          alert('Failed to book appointment.');
+          this.resetForm();
         }
       } catch (error) {
-        console.error('Error submitting appointment:', error);
+        console.error('Error creating appointment:', error);
+        alert('Failed to book appointment');
       }
     },
 
-    // Clear form after booking
-    clearForm() {
+    // Reset the appointment form
+    resetForm() {
       this.patientName = '';
       this.contactNumber = '';
       this.age = '';
-      this.department = '';
-      this.doctor = '';
+      this.selectedDepartment = '';
+      this.selectedDoctor = '';
+      this.appointmentDate = '';
       this.day = '';
       this.session = '';
-      this.appointmentDate = '';
+    },
+
+    // Clear doctor-related data
+    clearDoctorData() {
+      this.selectedDoctor = '';
+      this.availableDays = [];
+      this.availableShifts = [];
     }
   }
 };

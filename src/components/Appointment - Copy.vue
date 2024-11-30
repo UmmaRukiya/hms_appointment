@@ -1,215 +1,273 @@
 <template>
-    <div class="navbar-app">
-      <!-- <div class="logo">
-        <img src="/assets/image/log.png" alt="Logo" class="logo-img">
-        <span>HMS Hospital</span>
-      </div> -->
-        <nav>
-            <div class="navbar-left">
-                <ul>
-                    <li><a href="#"><i class="fas fa-user-md"></i> Doctor List</a></li>
-                    <li><a href="#"><i class="fas fa-bell"></i> Reminders</a></li>
-                </ul>
+  <div class="navbar-app">
+    <nav>
+      <div class="navbar-left">
+        <ul>
+          <li><a href="#"><i class="fas fa-user-md"></i> Doctor List</a></li>
+          <li><a href="#"><i class="fas fa-bell"></i> Reminders</a></li>
+        </ul>
+      </div>
+      <div class="navbar-right">
+        <ul>
+          <li><a href="#"><i class="fas fa-user-circle"></i> User Details</a></li>
+          <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <div class="appointment-container">
+    <div class="row px-4">
+      <div class="col-md-5">
+        <div class="form-container">
+          <h2>Book Your Appointment</h2>
+          <form @submit.prevent="handleAppointment" class="appointment-form">
+            <!-- Patient Information Section -->
+            <div class="row">
+              <div class="col-md-12">
+                <label for="patientName">Patient Name</label>
+                <input type="text" id="patientName" v-model="patientName" required placeholder="Enter your full name" class="form-control">
+              </div>
+
+              <div class="col-md-6">
+                <label for="contactNumber">Contact Number</label>
+                <input type="tel" id="contactNumber" v-model="contactNumber" required placeholder="Enter your contact number" class="form-control">
+              </div>
+              <div class="col-md-6 px-4">
+                <label for="age">Age</label>
+                <input type="number" id="age" v-model="age" required placeholder="Enter your age" class="form-control">
+              </div>
             </div>
-            <div class="navbar-right">
-                <ul>
-                    <li><a href="#"><i class="fas fa-user-circle"></i> User Details</a></li>
-                    <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                </ul>
+
+            <!-- Department Select -->
+            <div class="row">
+              <div class="col-md-12">
+                <label for="department">Choose Department</label>
+                <select v-model="selectedDepartment" @change="fetchDoctors">
+                  <option v-for="department in departments" :key="department.id" :value="department.id">
+                    {{ department.dep_name }}
+                  </option>
+                </select>
+                 <p v-if="departments.length === 0">No departments available</p>
+              </div>
             </div>
-        </nav>
-    </div>
-  
-    <div class="appointment-container">
-      <div class="row px-4">
-        <!-- Appointment Form Section -->
-        <div class="col-md-5">
-          <div class="form-container">
-            <h2>Book Your Appointment</h2>
-            <form action="#" method="post" class="appointment-form">
-              <!-- Patient Information Section -->
-              <div class="row">
-                <div class="col-md-12">
-                  <label for="patientName">Patient Name</label>
-                  <input type="text" id="patientName" name="patientName" required placeholder="Enter your full name" class="form-control">
-                </div>
-  
-                <div class="col-md-6">
-                  <label for="contactNumber">Contact Number</label>
-                  <input type="tel" id="contactNumber" name="contactNumber" required placeholder="Enter your contact number" class="form-control">
-                </div>
-                <div class="col-md-6 px-4">
-                  <label for="age">Age</label>
-                  <input type="number" id="age" name="age" required placeholder="Enter your age" class="form-control">
-                </div>
+
+            <!-- Doctor Select -->
+            <div class="row">
+              <div class="col-md-12">
+                <label for="doctor">Choose Doctor</label>
+                <select v-model="selectedDoctor">
+                  <option v-for="doctor in doctors" :key="doctor.doctor_id" :value="doctor.doctor_id">
+                    {{ doctor.name }}
+                  </option>
+                </select>
               </div>
-  
-              <div class="row">
-               
-  
-                <div class="col-md-12">
-                  <label for="department">Choose Department</label>
-                  <select id="department" name="department" required class="form-control">
-                    <option value="">--Select Department--</option>
-                    <option value="cardiology">Cardiology</option>
-                    <option value="neurology">Neurology</option>
-                    <option value="orthopedics">Orthopedics</option>
-                    <option value="pediatrics">Pediatrics</option>
-                  </select>
-                </div>
+            </div>
+
+            <!-- Day and Session Select -->
+            <div class="row">
+              <div class="col-md-6">
+                <label for="day">Day</label>
+                <select v-model="day"  class="form-control">
+                  <option value="">--Select Day--</option>
+                  <option value="monday">Monday</option>
+                  <option value="tuesday">Tuesday</option>
+                  <option value="wednesday">Wednesday</option>
+                  <option value="thursday">Thursday</option>
+                  <option value="friday">Friday</option>
+                </select>
               </div>
-  
-              <div class="row">
-                <div class="col-md-12">
-                  <label for="doctor">Choose Doctor</label>
-                  <select id="doctor" name="doctor" required class="form-control">
-                    <option value="">--Select Doctor--</option>
-                    <option value="dr-smith">Dr. Smith</option>
-                    <option value="dr-jones">Dr. Jones</option>
-                    <option value="dr-lee">Dr. Lee</option>
-                  </select>
-                </div>
-  
-                <div class="col-md-6">
-                  <label for="day"> Day</label>
-                  <select id="day" name="day" required class="form-control">
-                    <option value="">--Select Day--</option>
-                    <option value="monday">Monday</option>
-                    <option value="tuesday">Tuesday</option>
-                    <option value="wednesday">Wednesday</option>
-                    <option value="thursday">Thursday</option>
-                    <option value="friday">Friday</option>
-                  </select>
-                </div>
-                <div class="col-md-6 px-4">
-                  <label for="session">Session</label>
-                  <select id="session" name="session" required class="form-control">
-                    <option value="">--Select Session--</option>
-                    <option value="morning">Morning</option>
-                    <option value="afternoon">Afternoon</option>
-                    <option value="evening">Evening</option>
-                  </select>
-                </div>
+              <div class="col-md-6 px-4">
+                <label for="session">Session</label>
+                <select v-model="session" class="form-control">
+                  <option value="">--Select Session--</option>
+                  <option value="morning">Morning</option>
+                  <option value="afternoon">Afternoon</option>
+                  <option value="evening">Evening</option>
+                </select>
               </div>
-  
-              <div class="row">
-               
-  
-                <div class="col-md-6">
-                  <label for="appointmentDate">Appointment Date</label>
-                  <input type="date" id="appointmentDate" name="appointmentDate" required class="form-control">
-                </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <label for="appointmentDate">Appointment Date</label>
+                <input type="date" v-model="appointmentDate" required class="form-control">
               </div>
-  
-              <!-- Submit Button -->
-              <button type="submit" class="submit-btn btn btn-primary">Book Appointment</button>
-            </form>
-          </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn btn btn-primary">Book Appointment</button>
+          </form>
         </div>
-        <!-- <div class="col-md-1"></div> -->
-        <!-- Booking History Section -->
-        <div class="col-md-7 px-4">
-          <div class="history-container">
-            <h2>Booking History</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>Doctor</th>
-                  <th>Patient</th>
-                  <th>Reserved</th>
-                  <th>Schedule</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{{doctor}}</td>
-                  <td>John Doe</td>
-                  <td>2024-11-20</td>
-                  <td>2024-11-25 10:00 AM</td>
-                  <td>Confirmed</td>
-                </tr>
-                <tr>
-                  <td>Dr. Lee</td>
-                  <td>Jane Smith</td>
-                  <td>2024-11-18</td>
-                  <td>2024-12-01 02:00 PM</td>
-                  <td>Pending</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+      </div>
+
+      <!-- Booking History Section -->
+      <div class="col-md-7 px-4">
+        <div class="history-container">
+          <h2>Booking History</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Doctor</th>
+                <th>Patient</th>
+                <th>Reserved</th>
+                <th>Schedule</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(appointment, index) in appointments" :key="index">
+                <td>{{ appointment.doctor }}</td>
+                <td>{{ appointment.patientName }}</td>
+                <td>{{ appointment.appointmentDate }}</td>
+                <td>{{ appointment.day }} {{ appointment.session }}</td>
+                <td>{{ appointment.status }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: "Appointment",
-    data() {
-      return {
-        patientName: '',
-        contactNumber: '',
-        age: '',
-        department: '',
-        doctor: '',
-        day: '',
-        session: '',
-        appointmentDate: '',
-        appointments: []
-      };
-    },
-    methods: {
-      handleAppointment() {
-        // Validate form inputs
-        if (
-          !this.patientName || !this.contactNumber || !this.age || !this.department || !this.doctor || !this.day || !this.session || !this.appointmentDate
-        ) {
-          alert('Please fill all fields!');
-          return;
+  </div>
+</template>
+
+<script>
+import DataService from '@/services/DataService'; // Adjust the path based on where dataservice.js is located
+export default {
+  name: "Appointment",
+  data() {
+    return {
+      departments: [],
+      doctors: [],
+      selectedDepartment: '',
+      selectedDoctor: '',
+      patientName: '',
+      contactNumber: '',
+      age: '',
+      day: '',
+      session: '',
+      appointmentDate: '',
+      appointments: []
+    };
+  },
+  mounted() {
+    this.fetchDepartments(); // Fetch departments when component is mounted
+    this.fetchAppointments(); // Fetch appointment history
+  },
+  methods: {
+    // Fetch all departments from the backend
+    async fetchDepartments() {
+      try {
+        const response = await DataService.department();
+        const data = await response.data.data;
+        if (data) {
+          console.log(data);
+          this.departments = data; // Store departments
+        } else {
+          console.error('Failed to load departments');
         }
-  
-        // Simulate adding an appointment to history
-        const newAppointment = {
-          patientName: this.patientName,
-          contactNumber: this.contactNumber,
-          age: this.age,
-          department: this.department,
-          doctor: this.doctor,
-          day: this.day,
-          session: this.session,
-          appointmentDate: this.appointmentDate,
-          status: 'Confirmed'
-        };
-  
-        this.appointments.push(newAppointment);
-        this.clearForm();
-        alert('Appointment booked successfully!');
-      },
-      clearForm() {
-        this.patientName = '';
-        this.contactNumber = '';
-        this.age = '';
-        this.department = '';
-        this.doctor = '';
-        this.day = '';
-        this.session = '';
-        this.appointmentDate = '';
-      },
-      async submitAppointment() {
+      } catch (error) {
+        console.error("Error fetching departments:", error);
+      }
+    },
+
+    // Fetch doctors based on selected department
+    async fetchDoctors() {
+      if (this.selectedDepartment) {
+        console.log(this.selectedDepartment)
         try {
-          // const response = await axios.post('http://localhost:8000/api/appointmentrequest', this.appointment);
-          // this.message = response.data.message;  // Success message
+          const response = await DataService.doctor(this.selectedDepartment);
+          const data = await response.data.data;
+          if (data) {
+            this.doctors = data; // Store doctors
+          }else{
+            this.doctors =[];
+          }
         } catch (error) {
-          this.message = 'An error occurred while submitting the appointment request.';
-          console.error(error);
+          console.error("Error fetching doctors:", error);
         }
       }
+    },
+
+    // Fetch appointment history for the current user
+    async fetchAppointments() {
+      try {
+        const response = await DataService.appointmentrequest(); // Call the doctor method
+        if (response && response.data) {
+          this.doctors = response.data; // Store doctors data in the component's state
+        }
+       } catch (error) {
+        console.error("Error fetching appointment history:", error);
+      }
+    },
+
+    // Handle appointment form submission
+    async handleAppointment() {
+      // Validate form inputs
+      if (!this.patientName || !this.contactNumber || !this.age || !this.department || !this.doctor || !this.day || !this.session || !this.appointmentDate) {
+        alert('Please fill all fields!');
+        return;
+      }
+
+      // Prepare the data for the appointment request
+      const appointmentRequest = {
+        department_id: this.department,
+        doctor_id: this.doctor,
+        patient_name: this.patientName,
+        email: this.contactNumber, // Assuming contactNumber is used as email in the example
+        contact_no: this.contactNumber,
+        gender: "male", // Add logic for gender input if needed
+        age: this.age,
+        blood_id: "bloodgroup", // Add logic for blood type if needed
+        app_date: this.appointmentDate
+      };
+
+      try {
+        // Send appointment data to the backend API
+        const response = await fetch('/api/appointmentrequest/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(appointmentRequest)
+        });
+
+        if (response.ok) {
+          // If appointment is successfully booked, update the booking history
+          this.appointments.push({
+            doctor: this.doctors.find(doc => doc.doctor_id === this.doctor).name,
+            patientName: this.patientName,
+            appointmentDate: this.appointmentDate,
+            day: this.day,
+            session: this.session,
+            status: 'Confirmed'
+          });
+          this.clearForm();
+          alert('Appointment booked successfully!');
+        } else {
+          alert('Failed to book appointment.');
+        }
+      } catch (error) {
+        console.error('Error submitting appointment:', error);
+      }
+    },
+
+    // Clear form after booking
+    clearForm() {
+      this.patientName = '';
+      this.contactNumber = '';
+      this.age = '';
+      this.department = '';
+      this.doctor = '';
+      this.day = '';
+      this.session = '';
+      this.appointmentDate = '';
     }
   }
-  </script>
-  
+};
+</script>
+
+
   <style scoped>
   /* General reset */
   * {
