@@ -56,8 +56,8 @@
             <div class="row">
               <div class="col-md-12">
                 <label for="doctor">Choose Doctor</label>
-                <select v-model="selectedDoctor">
-                  <option v-for="doctor in doctors" :key="doctor.doctor_id" :value="doctor.doctor_id">
+                <select v-model="selectedDoctor" @change="fetchDoctorAvailability">
+                  <option v-for="doctor in doctors" :key="doctor.doctor_id" :value="doctor.id">
                     {{ doctor.name }}
                   </option>
                 </select>
@@ -67,19 +67,19 @@
             <div class="row">
               <div class="col-md-6">
                 <label for="day">Day</label>
-                <select v-model="day" class="form-control">
+                <select v-model="selectedDay" @change="autoFillDate">
                   <option value="">--Select Day--</option>
-                  <option v-for="day in availableDays" :key="day" :value="day">
-                    {{ day }}
+                  <option v-for="day in availableDays" :key="day.day.id" :value="day.day.day_name">
+                    {{ day.day.day_name }}
                   </option>
                 </select>
               </div>
               <div class="col-md-6 px-4">
                 <label for="session">Session</label>
-                <select v-model="session" class="form-control">
+                <select v-model="selectedShift">
                   <option value="">--Select Session--</option>
-                  <option v-for="shift in availableShifts" :key="shift" :value="shift">
-                    {{ shift }}
+                  <option v-for="shift in availableShifts" :key="shift.shift.id" :value="shift.shift.id">
+                    {{ shift.shift.shift_name }}
                   </option>
                 </select>
               </div>
@@ -113,10 +113,13 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(appointment, index) in appointments" :key="index">
-                <td>{{ appointment.doctor }}</td>
-                <td>{{ appointment.patientName }}</td>
-                <td>{{ appointment.appointmentDate }}</td>
+              <tr v-if="appointments.length === 0">
+                <td colspan="5">No appointment history available.</td>
+              </tr>
+              <tr v-for="appointment in appointments" :key="appointment.id">
+                <td>{{ appointment.doctor?.name }}</td>
+                <td>{{ appointment.patientName?.patient_name }}</td>
+                <td>{{ appointment.appointmentDate?.app_date }}</td>
                 <td>{{ appointment.day }} {{ appointment.session }}</td>
                 <td>{{ appointment.status }}</td>
               </tr>
@@ -139,20 +142,21 @@ export default {
       doctors: [],
       selectedDepartment: '',
       selectedDoctor: '',
+      selectedDay: '',
+      selectedShift: '',
+      availableDays: {},
+      availableShifts: [],
+      appointmentDate: '',
       patientName: '',
       contactNumber: '',
       age: '',
-      appointmentDate: '',
-      appointments: [],
-      availableDays: [],
-      availableShifts: [],
-      day: '',
-      session: '',
+      appointments: [], // Store the appointments for history
     };
   },
   mounted() {
     this.fetchDepartments(); // Fetch departments when component is mounted
     this.fetchAppointments(); // Fetch appointment history
+    
   },
   methods: {
     // Fetch all departments from the backend
@@ -193,10 +197,12 @@ export default {
       if (this.selectedDoctor) {
         try {
           const response = await DataService.doctorAvailability(this.selectedDoctor);
-          const data = await response.data;
+          const data = await response.data.data;
+          console.log(this.selectedDoctor)
+          console.log(response.data.data)
           if (data) {
-            this.availableDays = data.days; // List of available days
-            this.availableShifts = data.shifts; // List of available sessions
+            this.availableDays = response.data.data; // List of available days
+            this.availableShifts = response.data.data; // List of available sessions
           } else {
             this.availableDays = [];
             this.availableShifts = [];
@@ -206,13 +212,32 @@ export default {
         }
       }
     },
+    autoFillDate() {
+      if (this.selectedDay) {
+        const nearestDate = this.getNearestAvailableDate(this.selectedDay);
+        console.log(nearestDate)
+        this.appointmentDate = nearestDate;
+      }
+    },
+
+    getNearestAvailableDate(dayName,excludeToday=true,refDate = new Date()) {
+      // You can implement your own logic here to calculate the nearest available date.
+      // Example: Assume the nearest available date is today + 1 day
+      const dayOfWeek = ["sun","mon","tue","wed","thu","fri","sat"].indexOf(dayName.slice(0,3).toLowerCase());
+      if (dayOfWeek < 0) return;
+      refDate.setHours(0,0,0,0);
+      refDate.setDate(refDate.getDate() + +!!excludeToday + (dayOfWeek + 7 - refDate.getDay() - +!!excludeToday) % 7);
+      const nearestDate = new Date(refDate.setDate(refDate.getDate() + 1));
+      return nearestDate.toISOString().split('T')[0];
+
+    },
 
     // Fetch appointment history for the current user
     async fetchAppointments() {
       try {
         const response = await DataService.appointmentrequest(); // Call the appointment method
-        if (response && response.data) {
-          this.appointments = response.data; // Store appointment history
+        if (response && response.data.data) {
+          this.appointments = response.data.data; // Store appointment history
         }
       } catch (error) {
         console.error("Error fetching appointment history:", error);
@@ -221,45 +246,30 @@ export default {
 
     // Handle appointment form submission
     async handleAppointment() {
-      // Validate form inputs
-      if (!this.patientName || !this.contactNumber || !this.age || !this.selectedDepartment || !this.selectedDoctor || !this.day || !this.session || !this.appointmentDate) {
-        alert('Please fill all fields!');
-        return;
-      }
-
-      // Prepare the data for the appointment request
-      const appointmentRequest = {
-        department_id: this.selectedDepartment,
-        doctor_id: this.selectedDoctor,
+      const appointmentData = {
         patient_name: this.patientName,
         contact_no: this.contactNumber,
         age: this.age,
+        department_id: this.selectedDepartment,
+        doctor_id: this.selectedDoctor,
         app_date: this.appointmentDate,
-        gender: 'male', // Assuming gender is static here, modify if necessary
-        blood_id: 'bloodgroup' // Modify if necessary
+        day: this.selectedDay,
+        shift: this.selectedShift,
       };
 
       try {
-        // Send appointment data to the backend API
-        const response = await DataService.createAppointment(appointmentRequest);
+        await DataService.createAppointment(appointmentData);
+        
+        // Fetch the updated appointment history
+        await this.fetchAppointments();
 
-        if (response && response.data) {
-          // If appointment is successfully booked, update the booking history
-          this.appointments.push({
-            doctor: this.doctors.find(doc => doc.doctor_id === this.selectedDoctor).name,
-            patientName: this.patientName,
-            appointmentDate: this.appointmentDate,
-            day: this.day,
-            session: this.session,
-            status: 'Pending'
-          });
-
-          alert('Appointment booked successfully!');
-          this.resetForm();
-        }
+        // Optionally, show a success message
+        alert('Appointment successfully booked');
+        
+        // Reset the form after booking the appointment
+        this.resetForm();
       } catch (error) {
-        console.error('Error creating appointment:', error);
-        alert('Failed to book appointment');
+        console.error('Error booking appointment', error);
       }
     },
 

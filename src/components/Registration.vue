@@ -68,8 +68,7 @@ export default {
         contact: this.FormData.contact,
         birth_date: this.FormData.birth_date,
         email: this.FormData.email,
-        password: this.FormData.password,
-        c_password: this.FormData.c_password,
+        password: this.FormData.password
       };
 
       // Send registration data to the backend
@@ -79,7 +78,7 @@ export default {
             // sessionStorage.setItem('uid', response.data.data.token);
             router.push({ name: 'login' });
             alert('register success')
-            window.location.reload();
+            //window.location.reload();
           } else {
             alert(response.data.error);
             console.log(response.data.error)

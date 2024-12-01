@@ -2,10 +2,10 @@ import http from "../http-common";
 
 class DataService {
   login(data) {
-    return http.post("patient/login", data);
+    return http.post("patient_login", data);
   }
   registration(data) {
-    return http.post("patient/register", data);
+    return http.post("patient_register", data);
   }
   department(data) {
     return http.get("department/index", data);
@@ -13,9 +13,18 @@ class DataService {
   doctor(d) {
     return http.get("doctor/index?department_id="+d);
   }
+  doctorAvailability(d) {
+    return http.get("schedule/index?doctor_id="+d);
+  }
   appointmentrequest(data) {
     return http.get("appointmentrequest/index", data);
   }
+
+   // Add createAppointment method to handle POST request for creating an appointment
+   createAppointment(data) {
+    return http.post("appointmentrequest/create", data);  // Correct POST route to create an appointment
+  }
+  
   // orders(uid) {
   //   return http.get(`/orders/${uid}`);
   // }
