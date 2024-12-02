@@ -24,9 +24,9 @@ class DataService {
    createAppointment(data) {
     return http.post("appointmentrequest/create", data);  // Correct POST route to create an appointment
   }
-  getUserProfile(data){
-    return http.get("patient/index",data);
-  }
+  // getUserProfile(data){
+  //   return http.get("patient/index",data);
+  // }
   
   // orders(uid) {
   //   return http.get(`/orders/${uid}`);

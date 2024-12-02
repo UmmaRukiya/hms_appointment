@@ -12,8 +12,8 @@
           <!-- <li><a href="/profile"><i class="fas fa-user-circle"></i> User Details</a></li>
           <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li> -->
           <!-- Add conditional rendering to show user's name after login -->
-          <li v-if="userLoggedIn">
-            <a href="/profile"><i class="fas fa-user-circle"></i> {{ userName?.name}}</a>
+          <li >
+            <a href="/profile"><i class="fas fa-user-circle"></i>{{ userName.name}}</a>
           </li>
           <li><a href="#" @click="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
@@ -171,15 +171,21 @@ export default {
   methods: {
     async fetchUserProfile() {
     try {
-      const response = await DataService.getUserProfile(); // API to fetch logged-in user details
+      const response = await DataService.login(); // API to fetch logged-in user details
       if (response.data) {
         this.userLoggedIn = true;
-        this.userName = response.data.name; // Set the user's name
+        this.userName = response.data; // Set the user's name
+        console.log(response.data.name)
       }
     } catch (error) {
       console.error('Error fetching user profile', error);
     }
   },
+  logout() {
+      // Handle logout
+      sessionStorage.removeItem('udata');
+      this.$router.push('/login');
+    },
     // Fetch all departments from the backend
     async fetchDepartments() {
       try {
