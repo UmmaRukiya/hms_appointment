@@ -9,8 +9,13 @@
       </div>
       <div class="navbar-right">
         <ul>
-          <li><a href="#"><i class="fas fa-user-circle"></i> User Details</a></li>
-          <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+          <!-- <li><a href="/profile"><i class="fas fa-user-circle"></i> User Details</a></li>
+          <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li> -->
+          <!-- Add conditional rendering to show user's name after login -->
+          <li v-if="userLoggedIn">
+            <a href="/profile"><i class="fas fa-user-circle"></i> {{ userName?.name}}</a>
+          </li>
+          <li><a href="#" @click="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
       </div>
     </nav>
@@ -117,10 +122,10 @@
                 <td colspan="5">No appointment history available.</td>
               </tr>
               <tr v-for="appointment in appointments" :key="appointment.id">
-                <td>{{ appointment.doctor?.name }}</td>
-                <td>{{ appointment.patientName?.patient_name }}</td>
-                <td>{{ appointment.appointmentDate?.app_date }}</td>
-                <td>{{ appointment.day }} {{ appointment.session }}</td>
+                <td>{{ appointment.doctor.name }}</td>
+                <td>{{ appointment.patient_name }}</td>
+                <td>Serial:{{ appointment.id }}</td>
+                <td>{{ appointment.app_date }} {{ appointment.session }}</td>
                 <td>{{ appointment.status }}</td>
               </tr>
             </tbody>
@@ -137,6 +142,7 @@ import DataService from '@/services/DataService'; // Adjust the path based on wh
 export default {
   name: "Appointment",
   data() {
+    console.log(JSON.parse(sessionStorage.getItem('udata')));
     return {
       departments: [],
       doctors: [],
@@ -151,14 +157,29 @@ export default {
       contactNumber: '',
       age: '',
       appointments: [], // Store the appointments for history
+      userLoggedIn: false, // Check if user is logged in
+      userName: JSON.parse(sessionStorage.getItem('udata')), // Store logged-in user's name
+
     };
   },
   mounted() {
     this.fetchDepartments(); // Fetch departments when component is mounted
     this.fetchAppointments(); // Fetch appointment history
+    this.fetchUserProfile(); // Get user data when component is mounted
     
   },
   methods: {
+    async fetchUserProfile() {
+    try {
+      const response = await DataService.getUserProfile(); // API to fetch logged-in user details
+      if (response.data) {
+        this.userLoggedIn = true;
+        this.userName = response.data.name; // Set the user's name
+      }
+    } catch (error) {
+      console.error('Error fetching user profile', error);
+    }
+  },
     // Fetch all departments from the backend
     async fetchDepartments() {
       try {
@@ -247,6 +268,7 @@ export default {
     // Handle appointment form submission
     async handleAppointment() {
       const appointmentData = {
+        
         patient_name: this.patientName,
         contact_no: this.contactNumber,
         age: this.age,

@@ -58,9 +58,10 @@
       DataService.login(data)
         .then(response => {
           console.log(response.data.data.token)
-          if(response.data.data.token)
+          if(response.data.data.token){
             sessionStorage.setItem('uid', response.data.data.token);
-          else
+            sessionStorage.setItem('udata', JSON.stringify(response.data.data.token));
+          }else
             alert(response.data.error)
             
             router.push({ name: 'Appointment' });

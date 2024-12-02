@@ -27,12 +27,12 @@
                                         <li><router-link to="department">Department</router-link >
                                         <ul class="submenu">
                                             <li><a href="blog_details.html">Neuro Medicine</a></li>
-                                            <li><a href="cardiology">Cardiology</a></li>
+                                            <li><a href="/cardiology">Cardiology</a></li>
                                             <li><a href="elements.html">Gastroenterology</a></li>
                                             <li><a href="elements.html">Ent</a></li>
                                             <li><a href="elements.html">Gynee & OBS</a></li>
                                             <li><a href="elements.html">Nephrology</a></li>
-                                            <li><a href="elements.html">Orthopedics</a></li>
+                                            <li><a href="/orthopedics">Orthopedics</a></li>
                                             <li><a href="elements.html">Oncology</a></li>
                                             <li><a href="elements.html">Psychiatry</a></li>
                                             <li><a href="elements.html">Pediatrics</a></li>

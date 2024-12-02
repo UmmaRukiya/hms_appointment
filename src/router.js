@@ -30,6 +30,12 @@ const routes = [
     name: "registration",
     component: () => import("./components/Registration")
   },
+  {
+    path: "/profile",
+    alias: "/profile",
+    name: "UserProfile",
+    component: () => import("./components/UserProfile")
+  },
     {path: "/appointment",
     alias: "/appointment",
     name: "Appointment",
@@ -40,10 +46,11 @@ const routes = [
     name: "Doctor",
     component: () => import("./components/Doctor")
   },
-    {path: "/cardiology",
-    alias: "/cardiology",
-    name: "Cardiology",
-    component: () => import("./components/Cardiology")
+  {
+    path: "/:department", // Dynamically match any department like cardiology, neurology, etc.
+    name: "doctorDepartment",
+    component: () => import("./components/Doctor"),
+    props: true, // Pass route params to the component
   },
   // { path: '/registration', component: Registration },
   // { path: '/appointment', component: Appointment }
