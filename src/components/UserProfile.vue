@@ -12,7 +12,7 @@
         <div class="navbar-right">
           <ul>
             <li >
-              <a href="#"><i class="fas fa-user-circle"></i> {{ userName.name }}</a>
+              <a href="#"><i class="fas fa-user-circle"></i> {{ userName && userName.name ? userName.name : 'Guest' }}</a>
             </li>
             <li><a href="#" @click="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
           </ul>
@@ -59,7 +59,7 @@
             </div>
           </div>
 
-          <button @click="enableEditing" type="submit" class="submit-btn">Update Profile</button>
+          <button @click="enableEditing" type="button" class="submit-btn">Edit Profile</button>
         </form>
       </div>
       <div v-if="isEditing" class="form-container">
@@ -70,28 +70,28 @@
           <div class="row">
             <div class="col-md-6">
               <label for="patientName">Full Name</label>
-              <input type="text" id="patientName" v-model="patientName"  placeholder="Enter your full name" class="form-control">
+              <input type="text" id="patientName" v-model="userName.name"  placeholder="Enter your full name" class="form-control">
             </div>
             <div class="col-md-6">
               <label for="phone">Phone Number</label>
-              <input type="tel" id="phone" v-model="phone"  placeholder="Enter your phone number" class="form-control">
+              <input type="tel" id="phone" v-model="userName.contact"  placeholder="Enter your phone number" class="form-control">
             </div>
           </div>
           <div class="row">
             <div class="col-md-6">
               <label for="dob">Date of Birth</label>
-              <input type="date" id="dob" v-model="dob"  class="form-control">
+              <input type="date" id="dob" v-model="userName.birth_date"  class="form-control">
             </div>
             <div class="col-md-6">
               <label for="email">Email Address</label>
-              <input type="email" id="email" v-model="email"  placeholder="Enter your email address" class="form-control">
+              <input type="email" id="email" v-model="userName.email"  placeholder="Enter your email address" class="form-control">
             </div>
           </div>
           
           <div class="row">
             <div class="col-md-6">
               <label for="password">Password</label>
-              <input type="password" id="password" v-model="password"  placeholder="Enter your password" class="form-control">
+              <input type="password" id="password" v-model="userName.password"  placeholder="Enter your password" class="form-control">
             </div>
             <div class="col-md-6">
               <label for="confirmPassword">Re-type Password</label>
@@ -100,7 +100,7 @@
           </div>
 
           <button type="submit" class="submit-btn">Update Profile</button>
-          <button @click="cancelEditing " type="submit" class="submit-btn">Cancel Update </button>
+          <button @click="cancelEditing " type="button" class="submit-btn">Cancel Update </button>
         </form>
       </div>
     </div>
@@ -113,9 +113,10 @@ import DataService from '@/services/DataService'; // Assuming a DataService is u
 export default {
   name: "UserProfile",
   data() {
-    console.log(JSON.parse(sessionStorage.getItem('udata')))
+    const userData = JSON.parse(sessionStorage.getItem('udata'));
+    console.log('User Data:', userData);  // Check if userData is null or has the expected data
     return {
-      userName: JSON.parse(sessionStorage.getItem('udata')), // Fetching logged-in user's data
+      userName: userData || { name: 'Guest' },  // Use a default if not found
       isEditing : false,
       patientName: '',
       phone: '',
@@ -183,8 +184,8 @@ export default {
     },
     logout() {
       // Handle logout
-      sessionStorage.removeItem('udata');
-      this.$router.push('/login');
+      this.$router.push('/login'); // Redirect to login first
+      sessionStorage.removeItem('udata'); // Clear session storage
     },
   },
 };

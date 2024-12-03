@@ -29,7 +29,7 @@
             </div>
           </div>
   
-          <div class="row">
+          <div class="row"  @change="fetchDoctors">
             <!-- Loop over doctors dynamically -->
             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-" v-for="doctor in doctors" :key="doctor.id">
               <div class="single-team mb-30">
@@ -81,16 +81,19 @@
           // Fetch the list of doctors from the backend by department ID
           const response = await DataService.doctor(departmentId);
           doctors.value = response.data.data;  // Store the doctors in the component
+          console.log(doctors.value = response.data.data)
         } catch (error) {
           console.error("Error fetching doctors:", error);
         }
       };
+      
   
       // Set department name and fetch doctors when component is mounted
       onMounted(() => {
         const departmentId = route.params.department;  // Get the department name (e.g., "cardiology") from the route
         departmentName.value = departmentId.charAt(0).toUpperCase() + departmentId.slice(1);  // Capitalize the department name
         fetchDoctors(departmentId);  // Fetch doctors for that department
+      
       });
   
       return {
@@ -98,6 +101,25 @@
         departmentName,  // Return department name for dynamic display
       };
     },
+    methods: {
+    async fetchDoctors() {
+      if (this.selectedDepartment) {
+        try {
+          const response = await DataService.doctor(this.selectedDepartment);
+          const data = await response.data.data;
+          console.log(response.data.data)
+          if (data) {
+            this.doctors = data; // Store doctors
+            this.clearDoctorData(); // Reset doctor availability
+          } else {
+            this.doctors = [];
+          }
+        } catch (error) {
+          console.error("Error fetching doctors:", error);
+        }
+      }
+    },
+  }
   };
   </script>
   

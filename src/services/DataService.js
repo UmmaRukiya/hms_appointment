@@ -19,6 +19,9 @@ class DataService {
   appointmentrequest(data) {
     return http.get("appointmentrequest/index", data);
   }
+  appointment(data) {
+    return http.get("appointment/index", data);
+  }
 
    // Add createAppointment method to handle POST request for creating an appointment
    createAppointment(data) {

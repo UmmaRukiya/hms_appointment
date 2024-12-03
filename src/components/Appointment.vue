@@ -13,7 +13,7 @@
           <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li> -->
           <!-- Add conditional rendering to show user's name after login -->
           <li >
-            <a href="/profile"><i class="fas fa-user-circle"></i>{{ userName.name}}</a>
+            <a href="/profile"><i class="fas fa-user-circle"></i>{{ userName?.name}}</a>
           </li>
           <li><a href="#" @click="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
@@ -105,32 +105,66 @@
 
       <!-- Booking History Section -->
       <div class="col-md-7 px-4">
-        <div class="history-container">
-          <h2>Booking History</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Doctor</th>
-                <th>Patient</th>
-                <th>Reserved</th>
-                <th>Schedule</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-if="appointments.length === 0">
-                <td colspan="5">No appointment history available.</td>
-              </tr>
-              <tr v-for="appointment in appointments" :key="appointment.id">
-                <td>{{ appointment.doctor.name }}</td>
-                <td>{{ appointment.patient_name }}</td>
-                <td>Serial:{{ appointment.id }}</td>
-                <td>{{ appointment.app_date }} {{ appointment.session }}</td>
-                <td>{{ appointment.status }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+            <b-tabs content-class="mt-3">
+              <b-tab title="Appointment Requested" active>
+                <div class="history-container">
+                  <h2>Appointment Requested</h2>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Doctor</th>
+                        <th>Patient</th>
+                        <th>Reserved</th>
+                        <th>Schedule</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-if="appointments.length === 0">
+                        <td colspan="5">No appointment history available.</td>
+                      </tr>
+                      <tr v-for="appointmentreq in appointments" :key="appointmentreq.id">
+                        <td>{{ appointmentreq.doctor.name }}</td>
+                        <td>{{ appointmentreq.patient_name }}</td>
+                        <td>Serial:{{ appointmentreq.id }}</td>
+                        <td>{{ appointmentreq.app_date }} {{ appointmentreq.session }}</td>
+                        <td>{{ appointmentreq.status }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </b-tab>
+              <b-tab title="Appointment Accepted">
+                <div class="history-container">
+                  <h2>Appointment Accepted</h2>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Doctor</th>
+                        <th>Patient</th>
+                        <th>Reserved</th>
+                        <th>Schedule</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-if="appointments.length === 0">
+                        <td colspan="5">No appointment history available.</td>
+                      </tr>
+                      <tr v-for="appointment in appointment" :key="appointment.id">
+                        <td>{{ appointment.doctor.name }}</td>
+                        <td>{{ appointment.patient_name }}</td>
+                        <td>Serial:{{ appointment.serial }} </td>
+                        <td>{{ appointment.app_date }} {{ appointment.app_time }}</td>
+                        <td>{{ appointment.status }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </b-tab>
+            </b-tabs>
+        
+        
       </div>
     </div>
   </div>
@@ -165,6 +199,7 @@ export default {
   mounted() {
     this.fetchDepartments(); // Fetch departments when component is mounted
     this.fetchAppointments(); // Fetch appointment history
+    this.fetchAppointment(); // Fetch appointment history
     this.fetchUserProfile(); // Get user data when component is mounted
     
   },
@@ -270,13 +305,24 @@ export default {
         console.error("Error fetching appointment history:", error);
       }
     },
+    // Fetch appointment history  status for user
+    async fetchAppointment() {
+      try {
+        const response = await DataService.appointment(); // Call the appointment method
+        if (response && response.data.data) {
+          this.appointment = response.data.data; // Store appointment approved
+        }
+      } catch (error) {
+        console.error("Error fetching appointment history:", error);
+      }
+    },
 
     // Handle appointment form submission
     async handleAppointment() {
       const appointmentData = {
         
         patient_name: this.patientName,
-        contact_no: this.contactNumber,
+        patient_contact: this.contactNumber,
         age: this.age,
         department_id: this.selectedDepartment,
         doctor_id: this.selectedDoctor,
@@ -551,5 +597,6 @@ tr {
         width: 100%;
     }
 }
+
   </style>
   
