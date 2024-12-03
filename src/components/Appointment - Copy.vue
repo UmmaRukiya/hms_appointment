@@ -9,8 +9,13 @@
       </div>
       <div class="navbar-right">
         <ul>
-          <li><a href="#"><i class="fas fa-user-circle"></i> User Details</a></li>
-          <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+          <!-- <li><a href="/profile"><i class="fas fa-user-circle"></i> User Details</a></li>
+          <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li> -->
+          <!-- Add conditional rendering to show user's name after login -->
+          <li >
+            <a href="/profile"><i class="fas fa-user-circle"></i>{{ userName?.name}}</a>
+          </li>
+          <li><a href="#" @click="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
       </div>
     </nav>
@@ -93,36 +98,73 @@
             </div>
 
             <!-- Submit Button -->
-            <button type="button" @click="handleAppointment" class="submit-btn btn btn-primary">Book Appointment</button>
+            <button type="submit" class="submit-btn btn btn-primary">Book Appointment</button>
           </form>
         </div>
       </div>
 
       <!-- Booking History Section -->
       <div class="col-md-7 px-4">
-        <div class="history-container">
-          <h2>Booking History</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Doctor</th>
-                <th>Patient</th>
-                <th>Reserved</th>
-                <th>Schedule</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(appointment, index) in appointments" :key="index">
-                <td>{{ appointment.doctor }}</td>
-                <td>{{ appointment.patientName }}</td>
-                <td>{{ appointment.appointmentDate }}</td>
-                <td>{{ appointment.day }} {{ appointment.session }}</td>
-                <td>{{ appointment.status }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+            <b-tabs content-class="mt-3">
+              <b-tab title="Appointment Requested" active>
+                <div class="history-container">
+                  <h2>Appointment Requested</h2>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Doctor</th>
+                        <th>Patient</th>
+                        <th>Reserved</th>
+                        <th>Schedule</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-if="appointments.length === 0">
+                        <td colspan="5">No appointment history available.</td>
+                      </tr>
+                      <tr v-for="appointmentreq in appointments" :key="appointmentreq.id">
+                        <td>{{ appointmentreq.doctor.name }}</td>
+                        <td>{{ appointmentreq.patient_name }}</td>
+                        <td>Serial:{{ appointmentreq.id }}</td>
+                        <td>{{ appointmentreq.app_date }} {{ appointmentreq.session }}</td>
+                        <td>{{ appointmentreq.status }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </b-tab>
+              <b-tab title="Appointment Accepted">
+                <div class="history-container">
+                  <h2>Appointment Accepted</h2>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Doctor</th>
+                        <th>Patient</th>
+                        <th>Reserved</th>
+                        <th>Schedule</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-if="appointments.length === 0">
+                        <td colspan="5">No appointment history available.</td>
+                      </tr>
+                      <tr v-for="appointment in appointment" :key="appointment.id">
+                        <td>{{ appointment.doctor.name }}</td>
+                        <td>{{ appointment.patient_name }}</td>
+                        <td>Serial:{{ appointment.serial }} </td>
+                        <td>{{ appointment.app_date }} {{ appointment.app_time }}</td>
+                        <td>{{ appointment.status }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </b-tab>
+            </b-tabs>
+        
+        
       </div>
     </div>
   </div>
@@ -134,6 +176,7 @@ import DataService from '@/services/DataService'; // Adjust the path based on wh
 export default {
   name: "Appointment",
   data() {
+    console.log(JSON.parse(sessionStorage.getItem('udata')));
     return {
       departments: [],
       doctors: [],
@@ -147,14 +190,37 @@ export default {
       patientName: '',
       contactNumber: '',
       age: '',
+      appointments: [], // Store the appointments for history
+      userLoggedIn: false, // Check if user is logged in
+      userName: JSON.parse(sessionStorage.getItem('udata')), // Store logged-in user's name
+
     };
   },
   mounted() {
     this.fetchDepartments(); // Fetch departments when component is mounted
-    // this.fetchAppointments(); // Fetch appointment history
+    this.fetchAppointments(); // Fetch appointment history
+    this.fetchAppointment(); // Fetch appointment history
+    this.fetchUserProfile(); // Get user data when component is mounted
     
   },
   methods: {
+    async fetchUserProfile() {
+    try {
+      const response = await DataService.login(); // API to fetch logged-in user details
+      if (response.data) {
+        this.userLoggedIn = true;
+        this.userName = response.data; // Set the user's name
+        console.log(response.data.name)
+      }
+    } catch (error) {
+      console.error('Error fetching user profile', error);
+    }
+  },
+  logout() {
+      // Handle logout
+      sessionStorage.removeItem('udata');
+      this.$router.push('/login');
+    },
     // Fetch all departments from the backend
     async fetchDepartments() {
       try {
@@ -232,8 +298,19 @@ export default {
     async fetchAppointments() {
       try {
         const response = await DataService.appointmentrequest(); // Call the appointment method
-        if (response && response.data) {
-          this.appointments = response.data; // Store appointment history
+        if (response && response.data.data) {
+          this.appointments = response.data.data; // Store appointment history
+        }
+      } catch (error) {
+        console.error("Error fetching appointment history:", error);
+      }
+    },
+    // Fetch appointment history  status for user
+    async fetchAppointment() {
+      try {
+        const response = await DataService.appointment(); // Call the appointment method
+        if (response && response.data.data) {
+          this.appointment = response.data.data; // Store appointment approved
         }
       } catch (error) {
         console.error("Error fetching appointment history:", error);
@@ -243,19 +320,28 @@ export default {
     // Handle appointment form submission
     async handleAppointment() {
       const appointmentData = {
-        patientName: this.patientName,
-        contactNumber: this.contactNumber,
+        
+        patient_name: this.patientName,
+        patient_contact: this.contactNumber,
         age: this.age,
-        department: this.selectedDepartment,
-        doctor: this.selectedDoctor,
-        appointmentDate: this.appointmentDate,
+        department_id: this.selectedDepartment,
+        doctor_id: this.selectedDoctor,
+        app_date: this.appointmentDate,
         day: this.selectedDay,
         shift: this.selectedShift,
       };
 
       try {
         await DataService.createAppointment(appointmentData);
+        
+        // Fetch the updated appointment history
+        await this.fetchAppointments();
+
+        // Optionally, show a success message
         alert('Appointment successfully booked');
+        
+        // Reset the form after booking the appointment
+        this.resetForm();
       } catch (error) {
         console.error('Error booking appointment', error);
       }
@@ -511,5 +597,6 @@ tr {
         width: 100%;
     }
 }
+
   </style>
   

@@ -128,7 +128,12 @@
                         <td>{{ appointmentreq.patient_name }}</td>
                         <td>Serial:{{ appointmentreq.id }}</td>
                         <td>{{ appointmentreq.app_date }} {{ appointmentreq.session }}</td>
-                        <td>{{ appointmentreq.status }}</td>
+                        <!-- <td>{{ appointmentreq.status }}</td> -->
+                        <td>
+                          <span v-if="appointmentreq.status === 0">Expired</span>
+                          <span v-if="appointmentreq.status === 1">Pending</span>
+                          <!-- <span v-if="appointmentreq.status === 2">Approved</span> -->
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -148,15 +153,20 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-if="appointments.length === 0">
+                      <tr v-if="appointment.length === 0">
                         <td colspan="5">No appointment history available.</td>
                       </tr>
                       <tr v-for="appointment in appointment" :key="appointment.id">
                         <td>{{ appointment.doctor.name }}</td>
                         <td>{{ appointment.patient_name }}</td>
                         <td>Serial:{{ appointment.serial }} </td>
-                        <td>{{ appointment.app_date }} {{ appointment.app_time }}</td>
-                        <td>{{ appointment.status }}</td>
+                        <td>{{ appointment.app_date }} <br/> {{ appointment.app_time }}</td>
+                        <!-- <td>{{ appointment.status }}</td> -->
+                        <td>
+                          <!-- <span v-if="appointment.status === 0">Expired</span>
+                          <span v-if="appointment.status === 1">Pending</span> -->
+                          <span v-if="appointment.status === 2">Approved</span>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -191,6 +201,7 @@ export default {
       contactNumber: '',
       age: '',
       appointments: [], // Store the appointments for history
+      appointment: [], // Store the appointments for history
       userLoggedIn: false, // Check if user is logged in
       userName: JSON.parse(sessionStorage.getItem('udata')), // Store logged-in user's name
 
@@ -199,6 +210,7 @@ export default {
   mounted() {
     this.fetchDepartments(); // Fetch departments when component is mounted
     this.fetchAppointments(); // Fetch appointment history
+    setInterval(this.fetchAppointments, 60000); // Fetch appointments every 1 minute
     this.fetchAppointment(); // Fetch appointment history
     this.fetchUserProfile(); // Get user data when component is mounted
     
@@ -329,6 +341,7 @@ export default {
         app_date: this.appointmentDate,
         day: this.selectedDay,
         shift: this.selectedShift,
+         status: 1, // Set the initial status to pending
       };
 
       try {
