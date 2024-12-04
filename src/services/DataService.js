@@ -16,11 +16,11 @@ class DataService {
   doctorAvailability(d) {
     return http.get("schedule/index?doctor_id="+d);
   }
-  appointmentrequest(data) {
-    return http.get("appointmentrequest/index", data);
+  appointmentrequest(uid) {
+    return http.get("appointmentrequest/index?ref_id="+uid);
   }
-  appointment(data) {
-    return http.get("appointment/index", data);
+  appointment(uid) {
+    return http.get("appointment/index?ref_id="+uid);
   }
 
    // Add createAppointment method to handle POST request for creating an appointment

@@ -309,7 +309,8 @@ export default {
     // Fetch appointment history for the current user
     async fetchAppointments() {
       try {
-        const response = await DataService.appointmentrequest(); // Call the appointment method
+        let uid=sessionStorage.getItem('uid');
+        const response = await DataService.appointmentrequest(uid); // Call the appointment method
         if (response && response.data.data) {
           this.appointments = response.data.data; // Store appointment history
         }
@@ -320,7 +321,8 @@ export default {
     // Fetch appointment history  status for user
     async fetchAppointment() {
       try {
-        const response = await DataService.appointment(); // Call the appointment method
+        let uid=sessionStorage.getItem('uid');
+        const response = await DataService.appointment(uid); // Call the appointment method
         if (response && response.data.data) {
           this.appointment = response.data.data; // Store appointment approved
         }
@@ -341,9 +343,10 @@ export default {
         app_date: this.appointmentDate,
         day: this.selectedDay,
         shift: this.selectedShift,
-         status: 1, // Set the initial status to pending
+        status: 1, // Set the initial status to pending
+        ref_id:sessionStorage.getItem('uid')
       };
-
+console.log(appointmentData)
       try {
         await DataService.createAppointment(appointmentData);
         

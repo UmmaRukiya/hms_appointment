@@ -54,7 +54,7 @@
                                 </nav>
                             </div>
                             <div class="header-right-btn f-right d-none d-lg-block ml-30">
-                                <a href="#" class="btn header-btn">01654.066.456</a>
+                                <a href="#" class="btn header-btn">+955654416</a>
                             </div>
                         </div>
                     </div>   
