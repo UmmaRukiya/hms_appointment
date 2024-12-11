@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 30, 2024 at 05:32 AM
+-- Generation Time: Dec 04, 2024 at 09:44 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `appointments` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `ref_id` int(11) DEFAULT NULL,
   `patient_name` varchar(255) NOT NULL,
   `paitent_id` int(11) NOT NULL,
   `patient_contact` varchar(255) NOT NULL,
@@ -38,7 +39,7 @@ CREATE TABLE `appointments` (
   `app_time` time DEFAULT NULL,
   `serial` bigint(20) DEFAULT NULL,
   `problem` text DEFAULT NULL,
-  `status` int(11) NOT NULL DEFAULT 0 COMMENT '0 inactive,1 active',
+  `status` int(11) NOT NULL DEFAULT 0 COMMENT '0 expired,1 pending,2 approved',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -47,9 +48,8 @@ CREATE TABLE `appointments` (
 -- Dumping data for table `appointments`
 --
 
-INSERT INTO `appointments` (`id`, `patient_name`, `paitent_id`, `patient_contact`, `doctor_id`, `department_id`, `app_date`, `app_time`, `serial`, `problem`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Sohana', 2, '2154564', 1, 1, '2024-10-30', '20:00:00', 1, 'Lorem ipsum dolor sit amet', 1, '2024-10-29 21:23:21', '2024-10-29 21:23:21'),
-(2, 'Ritu', 3, '45464648', 2, 2, '2024-10-30', '20:00:00', 2, 'Lorem ipsum dolor sit amet', 1, '2024-10-29 21:23:55', '2024-10-29 21:23:55');
+INSERT INTO `appointments` (`id`, `ref_id`, `patient_name`, `paitent_id`, `patient_contact`, `doctor_id`, `department_id`, `app_date`, `app_time`, `serial`, `problem`, `status`, `created_at`, `updated_at`) VALUES
+(1, 11, 'Pritul', 12, '15415131', 1, 1, '2024-12-07', '19:00:00', 1, NULL, 2, '2024-12-03 23:18:08', '2024-12-03 23:18:08');
 
 -- --------------------------------------------------------
 
@@ -59,18 +59,27 @@ INSERT INTO `appointments` (`id`, `patient_name`, `paitent_id`, `patient_contact
 
 CREATE TABLE `appointment_requests` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `ref_id` int(11) DEFAULT NULL,
   `department_id` int(11) NOT NULL,
-  `doctor_id` bigint(20) UNSIGNED NOT NULL,
+  `doctor_id` int(11) NOT NULL,
   `patient_name` varchar(255) NOT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `contact_no` varchar(100) NOT NULL,
+  `patient_contact` varchar(100) NOT NULL,
   `gender` varchar(255) DEFAULT NULL,
   `age` varchar(255) NOT NULL,
   `blood_id` int(11) DEFAULT NULL,
   `app_date` date DEFAULT NULL,
+  `status` int(11) DEFAULT NULL COMMENT '0 expired, 1 pending ,2 approved',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `appointment_requests`
+--
+
+INSERT INTO `appointment_requests` (`id`, `ref_id`, `department_id`, `doctor_id`, `patient_name`, `email`, `patient_contact`, `gender`, `age`, `blood_id`, `app_date`, `status`, `created_at`, `updated_at`) VALUES
+(3, 11, 2, 2, 'pehu', NULL, '5456456', NULL, '22', NULL, '2024-12-10', 1, '2024-12-04 00:08:49', '2024-12-04 00:08:49');
 
 -- --------------------------------------------------------
 
@@ -133,7 +142,11 @@ CREATE TABLE `days` (
 INSERT INTO `days` (`id`, `day_name`, `created_at`, `updated_at`) VALUES
 (1, 'Saturday', '2024-10-29 20:55:00', '2024-10-29 20:55:00'),
 (2, 'Sunday', '2024-10-29 20:55:04', '2024-10-29 20:55:04'),
-(3, 'Monday', '2024-10-29 20:55:09', '2024-10-29 20:55:09');
+(3, 'Monday', '2024-10-29 20:55:09', '2024-10-29 20:55:09'),
+(4, 'Tuesday', '2024-11-30 21:42:01', '2024-11-30 21:42:01'),
+(5, 'Wednesday', '2024-11-30 21:42:10', '2024-11-30 21:42:10'),
+(6, 'Thursday', '2024-11-30 21:42:22', '2024-11-30 21:42:22'),
+(7, 'Friday', '2024-11-30 21:42:35', '2024-11-30 21:42:35');
 
 -- --------------------------------------------------------
 
@@ -407,9 +420,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (14, '2024_10_08_061152_create_nurses_table', 1),
 (15, '2024_10_10_153007_create_patients_table', 1),
 (16, '2024_10_11_150713_create_employes_table', 1),
-(17, '2024_10_11_160550_create_schedules_table', 1),
 (18, '2024_10_13_111822_create_appointments_table', 1),
-(19, '2024_10_13_112037_create_appointment_requests_table', 1),
 (20, '2024_10_13_112115_create_births_table', 1),
 (21, '2024_10_13_112134_create_deaths_table', 1),
 (22, '2024_10_13_112307_create_patient_admits_table', 1),
@@ -423,7 +434,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (32, '2024_10_24_083838_create_prescription_details_table', 1),
 (33, '2024_10_26_061134_create_medicines_table', 1),
 (35, '2024_10_13_112331_create_patient_bills_table', 2),
-(37, '2024_10_13_113318_create_patient_tests_table', 3);
+(37, '2024_10_13_113318_create_patient_tests_table', 3),
+(38, '2024_10_11_160550_create_schedules_table', 4),
+(39, '2024_10_13_112037_create_appointment_requests_table', 5);
 
 -- --------------------------------------------------------
 
@@ -480,8 +493,8 @@ CREATE TABLE `patients` (
   `mother_name` varchar(255) DEFAULT NULL,
   `husband_name` varchar(255) DEFAULT NULL,
   `marital_status` varchar(255) DEFAULT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` int(11) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `password` int(11) DEFAULT NULL,
   `contact` int(11) NOT NULL,
   `gender` varchar(255) DEFAULT NULL,
   `birth_date` date DEFAULT NULL,
@@ -499,7 +512,16 @@ CREATE TABLE `patients` (
 INSERT INTO `patients` (`id`, `name`, `father_name`, `mother_name`, `husband_name`, `marital_status`, `email`, `password`, `contact`, `gender`, `birth_date`, `blood_id`, `present_address`, `permanent_address`, `created_at`, `updated_at`) VALUES
 (1, 'Ritu', 'Akash', 'Mitu', 'Mukut', 'Married', 'wd@gmail.com', 0, 4565646, 'Female', '2024-10-04', 1, '2 no gate, Chittagong', '2 no gate, Chittagong', '2024-10-29 21:12:15', '2024-10-29 21:12:15'),
 (2, 'Sohana', 'Karim', 'Tasmina', 'Ratul', 'Married', 'w9@gmail.com', 0, 2154564, 'Female', '2024-10-10', 2, '2 no gate, Chittagong', '2 no gate, Chittagong', '2024-10-29 21:14:10', '2024-11-17 02:45:41'),
-(4, 'Toma', 'Jamal', 'Moyna', 'Mukut', 'Married', 'wr59@gmail.com', 123, 4565646, 'Female', '2024-11-13', 1, 'vghyfujyt', 'ghujyjyguhk', '2024-11-14 01:42:32', '2024-11-14 01:42:32');
+(4, 'Toma', 'Jamal', 'Moyna', 'Mukut', 'Married', 'wr59@gmail.com', 123, 4565646, 'Female', '2024-11-13', 1, 'vghyfujyt', 'ghujyjyguhk', '2024-11-14 01:42:32', '2024-11-14 01:42:32'),
+(5, 'p', NULL, NULL, NULL, NULL, 'p@gmail.com', 123456, 6456456, NULL, '2024-12-01', NULL, NULL, NULL, '2024-11-30 22:05:07', '2024-11-30 22:05:07'),
+(6, 'gf', NULL, NULL, NULL, NULL, '', 0, 25664, NULL, NULL, NULL, NULL, NULL, '2024-12-02 23:18:53', '2024-12-02 23:18:53'),
+(7, 'srdgstrg', NULL, NULL, NULL, NULL, '', 0, 2165465, NULL, NULL, NULL, NULL, NULL, '2024-12-02 23:20:18', '2024-12-02 23:20:18'),
+(8, 'bgvn', NULL, NULL, NULL, NULL, '', 0, 4576786, NULL, NULL, NULL, NULL, NULL, '2024-12-02 23:20:59', '2024-12-02 23:20:59'),
+(9, 'E', NULL, NULL, NULL, NULL, NULL, NULL, 545645611, NULL, NULL, NULL, NULL, NULL, '2024-12-03 00:09:44', '2024-12-03 00:09:44'),
+(10, 'fr', NULL, NULL, NULL, NULL, NULL, NULL, 4548484, NULL, NULL, NULL, NULL, NULL, '2024-12-03 21:58:08', '2024-12-03 21:58:08'),
+(11, 'Rukiya', NULL, NULL, NULL, NULL, 'rr@gmail.com', 123456, 123456789, NULL, '2000-12-03', NULL, NULL, NULL, '2024-12-03 22:30:09', '2024-12-03 22:30:09'),
+(12, 'Pritul', NULL, NULL, NULL, NULL, NULL, NULL, 15415131, NULL, NULL, NULL, NULL, NULL, '2024-12-03 23:18:08', '2024-12-03 23:18:08'),
+(13, 'Pehu', NULL, NULL, NULL, NULL, NULL, NULL, 21245412, NULL, NULL, NULL, NULL, NULL, '2024-12-04 00:06:22', '2024-12-04 00:06:22');
 
 -- --------------------------------------------------------
 
@@ -842,7 +864,7 @@ INSERT INTO `room_lists` (`id`, `room_cat_id`, `room_no`, `department_id`, `floo
 
 CREATE TABLE `schedules` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `employe_id` int(11) DEFAULT NULL,
+  `doctor_id` int(11) DEFAULT NULL,
   `day_id` int(11) DEFAULT NULL,
   `shift_id` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -853,17 +875,24 @@ CREATE TABLE `schedules` (
 -- Dumping data for table `schedules`
 --
 
-INSERT INTO `schedules` (`id`, `employe_id`, `day_id`, `shift_id`, `created_at`, `updated_at`) VALUES
-(2, 1, 1, 1, '2024-11-04 00:41:13', '2024-11-04 00:41:13'),
-(3, 1, 2, 2, '2024-11-04 00:54:30', '2024-11-04 00:54:30'),
-(4, 2, 1, 1, '2024-11-04 01:09:11', '2024-11-04 01:09:11'),
-(5, 2, 3, 1, '2024-11-04 01:09:38', '2024-11-04 01:09:38'),
-(6, 2, 1, 1, '2024-11-04 01:09:55', '2024-11-04 01:09:55'),
-(7, 2, 1, 1, '2024-11-04 01:32:22', '2024-11-04 01:32:22'),
-(8, 2, 1, 1, '2024-11-04 01:36:41', '2024-11-04 01:36:41'),
-(9, 3, 1, 2, '2024-11-04 01:37:04', '2024-11-04 01:37:04'),
-(10, 1, 1, 1, '2024-11-05 22:57:14', '2024-11-05 22:57:14'),
-(11, 2, 1, 2, '2024-11-05 22:59:41', '2024-11-05 22:59:41');
+INSERT INTO `schedules` (`id`, `doctor_id`, `day_id`, `shift_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 2, '2024-11-30 21:43:19', '2024-11-30 21:43:19'),
+(2, 1, 2, 2, '2024-11-30 21:43:19', '2024-11-30 21:43:19'),
+(3, 1, 3, 2, '2024-11-30 21:43:19', '2024-11-30 21:43:19'),
+(4, 2, 1, 2, '2024-11-30 21:44:44', '2024-11-30 21:44:44'),
+(5, 2, 3, 2, '2024-11-30 21:44:44', '2024-11-30 21:44:44'),
+(6, 2, 4, 2, '2024-11-30 21:44:44', '2024-11-30 21:44:44'),
+(7, 2, 5, 2, '2024-11-30 21:44:45', '2024-11-30 21:44:45'),
+(8, 2, 6, 2, '2024-11-30 21:44:45', '2024-11-30 21:44:45'),
+(9, 3, 1, 2, '2024-11-30 21:45:14', '2024-11-30 21:45:14'),
+(10, 3, 2, 2, '2024-11-30 21:45:14', '2024-11-30 21:45:14'),
+(11, 3, 5, 2, '2024-11-30 21:45:14', '2024-11-30 21:45:14'),
+(12, 3, 6, 2, '2024-11-30 21:45:14', '2024-11-30 21:45:14'),
+(13, 3, 7, 2, '2024-11-30 21:45:14', '2024-11-30 21:45:14'),
+(14, 4, 2, 2, '2024-11-30 21:45:53', '2024-11-30 21:45:53'),
+(15, 4, 3, 2, '2024-11-30 21:45:53', '2024-11-30 21:45:53'),
+(16, 4, 4, 2, '2024-11-30 21:45:53', '2024-11-30 21:45:53'),
+(17, 4, 5, 2, '2024-11-30 21:45:53', '2024-11-30 21:45:53');
 
 -- --------------------------------------------------------
 
@@ -929,8 +958,7 @@ ALTER TABLE `appointments`
 -- Indexes for table `appointment_requests`
 --
 ALTER TABLE `appointment_requests`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `appointment_requests_doctor_id_foreign` (`doctor_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `births`
@@ -1152,7 +1180,7 @@ ALTER TABLE `appointments`
 -- AUTO_INCREMENT for table `appointment_requests`
 --
 ALTER TABLE `appointment_requests`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `births`
@@ -1170,7 +1198,7 @@ ALTER TABLE `bloods`
 -- AUTO_INCREMENT for table `days`
 --
 ALTER TABLE `days`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `deaths`
@@ -1236,7 +1264,7 @@ ALTER TABLE `medicine_cats`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `nurses`
@@ -1248,7 +1276,7 @@ ALTER TABLE `nurses`
 -- AUTO_INCREMENT for table `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `patient_admits`
@@ -1326,7 +1354,7 @@ ALTER TABLE `room_lists`
 -- AUTO_INCREMENT for table `schedules`
 --
 ALTER TABLE `schedules`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `shifts`
@@ -1350,12 +1378,6 @@ ALTER TABLE `users`
 ALTER TABLE `appointments`
   ADD CONSTRAINT `appointments_department_id_foreign` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`),
   ADD CONSTRAINT `appointments_doctor_id_foreign` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`);
-
---
--- Constraints for table `appointment_requests`
---
-ALTER TABLE `appointment_requests`
-  ADD CONSTRAINT `appointment_requests_doctor_id_foreign` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`);
 
 --
 -- Constraints for table `births`
