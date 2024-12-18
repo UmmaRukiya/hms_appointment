@@ -49,7 +49,7 @@
                                             </ul>
                                         </li>
                                         <!-- <li><a href="contact.html">Contact</a></li> -->
-                                        <li><router-link to="appointment">Appointment</router-link></li>
+                                        <li><router-link to="login">Appointment</router-link></li>
                                     </ul>
                                 </nav>
                             </div>

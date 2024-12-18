@@ -46,12 +46,12 @@ const routes = [
     name: "Doctor",
     component: () => import("./components/Doctor")
   },
-  {
-    path: "/:department", // Dynamically match any department like cardiology, neurology, etc.
-    name: "doctorDepartment",
-    component: () => import("./components/Doctor"),
-    props: true, // Pass route params to the component
-  },
+  // {
+  //   path: "/:department", // Dynamically match any department like cardiology, neurology, etc.
+  //   name: "doctorDepartment",
+  //   component: () => import("./components/Doctor"),
+  //   props: true, // Pass route params to the component
+  // },
   // { path: '/registration', component: Registration },
   // { path: '/appointment', component: Appointment }
 ];
@@ -62,13 +62,13 @@ const router = createRouter({
 });
 
 // Global navigation guard to remove the trailing slash
-router.beforeEach((to, from, next) => {
-  if (to.path.endsWith('/')) {
-    next({ path: to.path.slice(0, -1), query: to.query, hash: to.hash });
-  } else {
-    next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   if (to.path.endsWith('/')) {
+//     next({ path: to.path.slice(0, -1), query: to.query, hash: to.hash });
+//   } else {
+//     next();
+//   }
+// });
 
 
 export default router;
